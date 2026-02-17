@@ -6,6 +6,7 @@
 #include "driver/i2s_std.h"
 #include "driver/gpio.h"
 #include "mbedtls/base64.h"
+#include "secrets.h"
 #include <atomic>
 
 // ==========================================
@@ -331,7 +332,9 @@ void TaskWiFi(void *pvParameters)
 
   webSocket.setReconnectInterval(5000);
   webSocket.enableHeartbeat(15000, 3000, 2);
-  webSocket.beginSSL("generativelanguage.googleapis.com", 443, "/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=YOUR_API_KEY");
+  String baseUrl = "/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=";
+  String fullUrl = baseUrl + String(GEMINI_API_KEY);
+  webSocket.beginSSL("generativelanguage.googleapis.com", 443, fullUrl);
   webSocket.onEvent(webSocketEvent);
 
   for (;;)
